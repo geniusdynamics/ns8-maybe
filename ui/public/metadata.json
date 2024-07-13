@@ -1,7 +1,7 @@
 {
-  "name": "kickstart",
+  "name": "maybe",
   "description": {
-    "en": "My kickstart module"
+    "en": "OS for your personal finances"
   },
   "categories": [],
   "authors": [
@@ -11,9 +11,9 @@
     }
   ],
   "docs": {
-    "documentation_url": "https://docs.kickstart.com/",
+    "documentation_url": "https://maybe.co/tools",
     "bug_url": "https://github.com/NethServer/dev",
-    "code_url": "https://github.com/author/ns8-kickstart"
+    "code_url": "https://github.com/author/ns8-maybe"
   },
-  "source": "ghcr.io/nethserver/kickstart"
+  "source": "ghcr.io/geniusdynamics/maybe"
 }

@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 
 #
@@ -8,26 +9,52 @@
 import json
 import sys
 import agent
+import os
 
 # Try to parse the stdin as JSON.
 # If parsing fails, output everything to stderr
 data = json.load(sys.stdin)
 
+HOST = data.get('host')
 #This is specific to you module, so you need to change it accordingly.
-# we read a json stdin {"vars1":true, "var2":"foo", "vars3": 3} and we writ it to .config/state/environment
-# Upper case to set environment variable and minor case to read from stdin
+# GET MAYBE SECRET KEY FROM ENVIROMENT
+SECRET_KEY_BASE = os.getenv('SECRET_KEY_BASE')
+MAYBE_PREPL_HOST="0.0.0.0"
+APP_DOMAIN="https://"+HOST
+MAYBE_REDIS_URI="redis://redis-app/0"
+# EMAIL SETTINGS
+rdb = agent.redis_connect(use_replica=True)
+smtp_settings = agent.get_smarthost_settings(rdb)
 
-# this values must exists in the json stdin
-# agent.set_env("MAIL_SERVER", data["mail_server"])
-# agent.set_env("LDAP_DOMAIN", data["ldap_domain"])
+# SMTP Configuration
+# This is only needed if you intend on sending emails from your Maybe instance (such as for password resets or email financial reports).
+# Resend.com is a good option that offers a free tier for sending emails.
+# SMTP_ADDRESS=
+# SMTP_PORT=465
+# SMTP_USERNAME=
+# SMTP_PASSWORD=
+# SMTP_TLS_ENABLED=true
 
-# you can add default values for the following variables
-# agent.set_env("MAIL_DOMAIN",data.get("mail_domain",""))
-# agent.set_env("WOWORKERSCOUNT",data.get("workers_count",3))
-# agent.set_env("AUXILIARYACCOUNT",data.get("auxiliary_account",True))
-# agent.set_env("ACTIVESYNC",data.get("activesync",False))
 
+SMTP_ADDRESS=smtp_settings['host']
+SMTP_PORT['port']
+SMTP_USERNAME=smtp_settings['username']
+SMTP_PASSWORD=smtp_settings['password']
+SMTP_TLS_ENABLED='true' if smtp_settings['tls_verify'] else 'false'
 
-# Make sure everything is saved inside the environment file
+maybe_config = {
+    "SECRET_KEY_BASE": SECRET_KEY_BASE,
+    "SELF_HOSTING_ENABLED": "true",
+    "RAILS_FORCE_SSL": "false",
+    " RAILS_ASSUME_SS": "false",
+    "GOOD_JOB_EXECUTION_MODE": "async",
+    "MAYBE_SMTP_DEFAULT_REPLY_TO": MAYBE_SMTP_DEFAULT_REPLY_TO,
+    "SMTP_ADDRESS": SMTP_ADDRESS,
+    "SMTP_PORT": SMTP_PORT,
+    "SMTP_USERNAME": SMTP_USERNAME,
+    "SMTP_PASSWORD": SMTP_PASSWORD,
+    "SMTP_TLS_ENABLED": SMTP_TLS_ENABLED
+}
+agent.write_envfile("maybe.env", maybe_config)
 # just before starting systemd unit
 #agent.dump_env()

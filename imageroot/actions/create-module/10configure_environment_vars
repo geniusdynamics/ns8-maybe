@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+
+#
+# Copyright (C) 2022 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+import json
+import sys
+import agent
+import os
+import base64
+
+# Try to parse the stdin as JSON.
+# If parsing fails, output everything to stderr
+data = json.load(sys.stdin)
+
+#This is specific to you module, so you need to change it accordingly.
+# Database Configuration
+# DB_HOST=localhost # May need to be changed to `DB_HOST=db` if using devcontainer
+# DB_PORT=5432
+# POSTGRES_PASSWORD=postgres
+# POSTGRES_USER=postgres
+
+
+def generate_random_password():
+    password = os.urandom(16).hex()
+    return password[:16]
+
+
+#This is specific to you module, so you need to change it accordingly.
+# POSTGRES DB CONFIGURATION
+POSTGRES_DB = data.get('POSTGRES_DB', 'maybe')
+POSTGRES_USER = data.get('POSTGRES_USER', 'maybe')
+POSTGRES_PASSWORD = generate_random_password()
+
+postgres_config = {
+    'POSTGRES_DB': POSTGRES_DB,
+    'POSTGRES_USER': POSTGRES_USER,
+    'POSTGRES_PASSWORD': POSTGRES_PASSWORD
+}
+agent.write_envfile("database.env", postgres_config)
+
+maybe_database = {
+    'DB_HOST': 'postgresql-app',
+    'DB_PORT': '5432',
+    'POSTGRES_PASSWORD': POSTGRES_PASSWORD,
+    'POSTGRES_USER': POSTGRES_USER,
+    'GITHUB_REPO_OWNER': 'maybe-finance',
+    'GITHUB_REPO_NAME': 'maybe',
+    'GITHUB_REPO_BRANCH': 'main',
+}
+agent.write_envfile("maybe-database.env", maybe_database)
+# Generate a 32-byte random binary string
+random_bytes = os.urandom(24)
+
+# Encode the binary string to a 32-character string using base64
+SECRET_KEY_BASE = base64.urlsafe_b64encode(random_bytes).rstrip(b'=').decode('ascii')
+
+agent.set_env('SECRET_KEY_BASE', SECRET_KEY_BASE)
+
+# just before starting systemd unit
+agent.dump_env()

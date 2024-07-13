@@ -1,0 +1,36 @@
+#
+# Copyright (C) 2022 Nethesis S.r.l.
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+
+[Unit]
+Description=Podman  maybe-app.service
+BindsTo=maybe.service
+After=maybe.service postgresql-app.service
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+EnvironmentFile=%S/state/environment
+EnvironmentFile=-%S/state/smarthost.env
+WorkingDirectory=%S/state
+Restart=always
+TimeoutStopSec=70
+ExecStartPre=/bin/mkdir -p config
+ExecStartPre=/bin/rm -f %t/maybe-app.pid %t/maybe-app.ctr-id
+ExecStartPre=-runagent discover-smarthost
+ExecStart=/usr/bin/podman run --conmon-pidfile %t/maybe-app.pid \
+    --cidfile %t/maybe-app.ctr-id --cgroups=no-conmon \
+    --pod-id-file %t/maybe.pod-id --replace -d --name  maybe-app \
+    --env-file=%S/state/maybe-database.env \
+    --env-file=%S/state/maybe.env \
+    --volume app-storage:/rails/storage:Z \
+    ${MAYBE_IMAGE}
+ExecStop=/usr/bin/podman stop --ignore --cidfile %t/maybe-app.ctr-id -t 10
+ExecReload=/usr/bin/podman kill -s HUP maybe-app
+SyslogIdentifier=%u
+ExecStopPost=/usr/bin/podman rm --ignore -f --cidfile %t/maybe-app.ctr-id
+PIDFile=%t/maybe-app.pid
+Type=forking
+
+[Install]
+WantedBy=default.target
