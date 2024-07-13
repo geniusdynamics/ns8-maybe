@@ -37,7 +37,7 @@ smtp_settings = agent.get_smarthost_settings(rdb)
 
 
 SMTP_ADDRESS=smtp_settings['host']
-SMTP_PORT['port']
+SMTP_PORT=smtp_settings['port']
 SMTP_USERNAME=smtp_settings['username']
 SMTP_PASSWORD=smtp_settings['password']
 SMTP_TLS_ENABLED='true' if smtp_settings['tls_verify'] else 'false'
