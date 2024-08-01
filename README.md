@@ -37,6 +37,11 @@ The above command will:
 - start and configure the maybe instance
 - configure a virtual host for trafik to access the instance
 
+## Default login credentials
+Email: user@maybe.local
+Password: password
+
+
 ## Get the configuration
 You can retrieve the configuration with
 
