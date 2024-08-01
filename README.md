@@ -37,10 +37,10 @@ The above command will:
 - start and configure the maybe instance
 - configure a virtual host for trafik to access the instance
 
-## Default login credentials
-Email: user@maybe.local
-Password: password
-
+## Create your account
+The first time you run the app, you will need to register a new account by hitting "register" on the login page.
+Enter your email
+Enter a password
 
 ## Get the configuration
 You can retrieve the configuration with
