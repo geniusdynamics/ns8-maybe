@@ -14,37 +14,27 @@ import os
 # If parsing fails, output everything to stderr
 data = json.load(sys.stdin)
 
-HOST = data.get('host')
-#This is specific to you module, so you need to change it accordingly.
+HOST = data.get("host")
+# This is specific to you module, so you need to change it accordingly.
 # GET MAYBE SECRET KEY FROM ENVIROMENT
-SECRET_KEY_BASE = os.getenv('SECRET_KEY_BASE')
-MAYBE_PREPL_HOST="0.0.0.0"
-APP_DOMAIN="https://"+HOST
-MAYBE_REDIS_URI="redis://redis-app/0"
+MAYBE_PREPL_HOST = "0.0.0.0"
+APP_DOMAIN = "https://" + HOST
 # EMAIL SETTINGS
 rdb = agent.redis_connect(use_replica=True)
 smtp_settings = agent.get_smarthost_settings(rdb)
 
 # SMTP Configuration
-# This is only needed if you intend on sending emails from your Maybe instance (such as for password resets or email financial reports).
-# Resend.com is a good option that offers a free tier for sending emails.
-# SMTP_ADDRESS=
-# SMTP_PORT=465
-# SMTP_USERNAME=
-# SMTP_PASSWORD=
-# SMTP_TLS_ENABLED=true
 
 
-SMTP_ADDRESS=smtp_settings['host']
-SMTP_PORT=smtp_settings['port']
-SMTP_USERNAME=smtp_settings['username']
-SMTP_PASSWORD=smtp_settings['password']
-SMTP_TLS_ENABLED='true' if smtp_settings['tls_verify'] else 'false'
-EMAIL_SENDER=smtp_settings['username']
+SMTP_ADDRESS = smtp_settings["host"]
+SMTP_PORT = smtp_settings["port"]
+SMTP_USERNAME = smtp_settings["username"]
+SMTP_PASSWORD = smtp_settings["password"]
+SMTP_TLS_ENABLED = "true" if smtp_settings["tls_verify"] else "false"
+EMAIL_SENDER = smtp_settings["username"]
 
 maybe_config = {
     "APP_DOMAIN": APP_DOMAIN,
-    "SECRET_KEY_BASE": SECRET_KEY_BASE,
     "SELF_HOSTING_ENABLED": "true",
     "RAILS_FORCE_SSL": "false",
     "RAILS_ASSUME_SS": "false",
@@ -54,8 +44,8 @@ maybe_config = {
     "SMTP_USERNAME": SMTP_USERNAME,
     "SMTP_PASSWORD": SMTP_PASSWORD,
     "SMTP_TLS_ENABLED": SMTP_TLS_ENABLED,
-    "EMAIL_SENDER": EMAIL_SENDER
+    "EMAIL_SENDER": EMAIL_SENDER,
 }
 agent.write_envfile("maybe.env", maybe_config)
 # just before starting systemd unit
-#agent.dump_env()
+# agent.dump_env()
