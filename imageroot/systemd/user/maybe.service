@@ -10,8 +10,8 @@
 
 [Unit]
 Description=Podman maybe.service
-Requires=postgresql-app.service maybe-app.service
-Before=postgresql-app.service maybe-app.service
+Requires=postgresql-app.service maybe-app.service maybe-worker-app.service redis-app.service
+Before=postgresql-app.service maybe-app.service maybe-worker-app.service redis-app.service
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n
