@@ -17,7 +17,8 @@ reponame="maybe"
 # Node.js 25+ no longer ships Corepack, install it from npm
 # renovate: datasource=npm packageName=corepack
 corepack_version=0.36.0
-APP_VERSION="0.6.0"
+# renovate: datasource=docker packageName=ghcr.io/maybe-finance/maybe
+APP_VERSION=0.6.0
 
 # Create a new empty container image
 container=$(buildah from scratch)
