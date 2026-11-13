@@ -17,7 +17,8 @@ reponame="maybe"
 # Node.js 25+ no longer ships Corepack, install it from npm
 # renovate: datasource=npm packageName=corepack
 corepack_version=0.36.0
-APP_VERSION="0.6.0"
+# renovate: datasource=docker packageName=ghcr.io/maybe-finance/maybe
+APP_VERSION=0.6.0
 
 # Create a new empty container image
 container=$(buildah from scratch)
@@ -50,6 +51,7 @@ buildah config --entrypoint=/ \
 	--label="org.nethserver.authorizations=traefik@node:routeadm" \
 	--label="org.nethserver.tcp-ports-demand=1" \
 	--label="org.nethserver.rootfull=0" \
+    --label="org.nethserver.min-core=3.0.0" \
 	--label="org.nethserver.images=docker.io/postgres:15.20-alpine3.24 ghcr.io/maybe-finance/maybe:${APP_VERSION} docker.io/redis:7.4.12" \
 	"${container}"
 # Commit the image

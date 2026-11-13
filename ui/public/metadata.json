@@ -1,9 +1,12 @@
 {
   "name": "maybe",
   "description": {
-    "en": "OS for your personal finances"
+    "en": "Maybe is an app to manage your personal finances, track accounts, investments and net worth in one place.",
+    "it": "Maybe è un'applicazione per gestire le proprie finanze personali, investimenti e patrimonio."
   },
-  "categories": [],
+  "categories": [
+    "office"
+  ],
   "authors": [
     {
       "name": "Name Surname",
